@@ -1,1 +1,1 @@
-SELECT * FROM t_shop WHERE id = 1
+SELECT * FROM t_shop WHERE id = ?
