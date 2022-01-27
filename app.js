@@ -35,7 +35,7 @@ app.get("/test", async (req, res, next) => {
             "UPDATE t_shop SET score=? WHERE id=?",
             [4.11, 1]
         );
-        throw new Error("Test exception");
+        // throw new Error("Test exception");  // エラーを起こしてトランザクションが動作しているかの確認をする。エラーがなければselect id,name,score from t_shop where id = 1の値が更新される。
         await tran.commit();
         res.end("OK");
     }catch(err){
