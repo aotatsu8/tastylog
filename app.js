@@ -26,23 +26,7 @@ app.use("/public", express.static(path.join(__dirname, "/public")));
 app.use(accesslogger());
 
 // Dynamic resource rooting
-app.get("/test", async (req, res, next) => {
-    const { MySQLClient } = require("./lib/databases/client.js");
-    var tran;
-    try{
-        tran = await MySQLClient.beginTransaction();
-        await tran.executeQuery(
-            "UPDATE t_shop SET score=? WHERE id=?",
-            [4.11, 1]
-        );
-        // throw new Error("Test exception");  // エラーを起こしてトランザクションが動作しているかの確認をする。エラーがなければselect id,name,score from t_shop where id = 1の値が更新される。
-        await tran.commit();
-        res.end("OK");
-    }catch(err){
-        await tran.rollback();
-        next(err);
-    }
-});
+app.use("/account", require("./routes/account.js"));
 app.use("/search", require("./routes/search.js"));
 app.use("/shops", require("./routes/shops.js"));
 app.use("/", require("./routes/index.js"));
