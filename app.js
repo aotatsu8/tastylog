@@ -22,8 +22,11 @@ app.use((req, res, next) => {
 app.use(favicon(path.join(__dirname, "/public/favicon.ico")));
 app.use("/public", express.static(path.join(__dirname, "/public")));
 
-// Set Access log
+// Set access log
 app.use(accesslogger());
+
+// Set middleware
+app.use(express.urlencoded({extended: true }));
 
 // Dynamic resource rooting
 app.use("/account", require("./routes/account.js"));
