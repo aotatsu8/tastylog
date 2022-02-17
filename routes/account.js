@@ -8,7 +8,7 @@ router.get("/", authorize(PRIVILEGE.NORMAL), (req, res, next) => {
 router.get("/login", (req, res, next) => {
     res.render("./account/login.ejs", {"message": req.flash("message")});
 });
-
+f
 router.post("/login", authenticate());
 
 router.post("/logout", (req, res, next) => {
