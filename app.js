@@ -12,7 +12,7 @@ const cookie = require("cookie-parser");
 const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
 const flash = require("connect-flash");
-
+const gracefulSutdown = require("http-graceful-shutdown");
 const app = express();
 
 // Express settings
@@ -87,6 +87,27 @@ app.use((err, req, res, next) => {
 
 
 // Excute web application
-app.listen(appconfig.PORT, () => {
+var server = app.listen(appconfig.PORT, () => {
     logger.application.info(`Application listening at ${appconfig.PORT}`);
+});
+
+// Graceful sutdown
+gracefulSutdown(server, {
+    signals: "SIGINT SIGTERM",
+    timeout: 10000,
+    onShutdown: () => {
+        return new Promise((resolve, reject) => {
+            const { pool } = require("./lib/databases/pool.js");
+            pool.end((err) => {
+                if(err){
+                    return reject(err);
+                }
+                resolve();
+            });
+        });
+    },
+    finally: () => {
+        const logger = require("./lib/log/logger.js").application;
+        logger.info("Application sutdown finished.");
+    }
 });
